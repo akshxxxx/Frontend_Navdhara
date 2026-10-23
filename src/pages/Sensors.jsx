@@ -12,7 +12,7 @@ import { InteractiveMap } from '../components/InteractiveMap';
 
 // Raah Node (ESP32 slope sensor) console: Backend/docs/NODE_API.md §5.
 // Four sensors per node (Raah Node build workflow §4.1): MPU6050 tilt + tilt rate + vibration,
-// capacitive soil moisture, rain plate. Polls /node/fleet + /node/incidents every 2 s.
+// LM393 soil moisture (GPIO34), LM393 rain plate (GPIO35). Polls /node/fleet + /node/incidents every 2 s.
 
 const POLL_MS = 2000;
 
@@ -218,6 +218,7 @@ function SensorReadout({ node, history, segName, onAck, acking }) {
             {lv.wet
               ? <span className="font-semibold text-amber-700">Saturated (≥ {T.moistSat}%): tilt thresholds lowered to 60%.</span>
               : <>Saturated at ≥ {T.moistSat}%: then tilt thresholds drop to 60%.</>}
+            {h.soil_raw != null && <span className="block tabular-nums">LM393 on GPIO34 · ADC {Math.round(h.soil_raw)} (dry 4095, wet ~1250)</span>}
           </div>
         </SensorTile>
 
@@ -229,7 +230,10 @@ function SensorReadout({ node, history, segName, onAck, acking }) {
             </span>
             <span className="text-xs text-granite">{r.rain_wet ? 'Rain on the plate now' : 'No rain on the plate'}</span>
           </div>
-          <div className="text-[10px] text-granite mt-3">Rain on the plate raises the node to at least WATCH. Chart: 1 = wet, 0 = dry.</div>
+          <div className="text-[10px] text-granite mt-3">
+            Rain on the plate raises the node to at least WATCH. Chart: 1 = wet, 0 = dry.
+            {h.rain_raw != null && <span className="block tabular-nums">LM393 on GPIO35 · ADC {Math.round(h.rain_raw)}{h.rain_pct != null ? ` · ${Math.round(h.rain_pct)}% wet` : ''} (dry 4095, wet ~2400)</span>}
+          </div>
         </SensorTile>
       </div>
 
@@ -239,6 +243,7 @@ function SensorReadout({ node, history, segName, onAck, acking }) {
         <span>outbox {h.buffered ?? '—'}</span>
         <span>uptime {h.uptime_s != null ? `${Math.round(h.uptime_s / 60)} min` : '—'}</span>
         <span>fw {h.fw ?? '—'}</span>
+        {h.state_source && <span>state decided by {h.state_source === 'server' ? 'the backend (raw data)' : 'the node'}</span>}
         <span>delivered {node.delivery?.delivered_pct ?? '—'}%{node.delivery?.late_recovered ? ` (${node.delivery.late_recovered} late)` : ''}</span>
       </div>
       <p className="text-[10px] text-granite mt-2">Thresholds shown are the firmware defaults from the bench workflow; the node decides its state with its flashed values.</p>

@@ -89,7 +89,7 @@ export const About = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="flex gap-2"><Mountain className="w-4 h-4 text-river shrink-0 mt-0.5" /><span><strong className="text-ink">Tilt and tilt rate</strong> (MPU6050): WATCH from 2°, WARNING from 5° or 3°/min, ALARM from 8° or 8°/min.</span></div>
             <div className="flex gap-2"><Waves className="w-4 h-4 text-river shrink-0 mt-0.5" /><span><strong className="text-ink">Vibration</strong> (MPU6050): WARNING at 0.10 g RMS; a hard knock (≥ 0.35 g) gives WARNING at once and ALARM when confirmed.</span></div>
-            <div className="flex gap-2"><Droplets className="w-4 h-4 text-river shrink-0 mt-0.5" /><span><strong className="text-ink">Soil moisture</strong> (capacitive): at 70% or more the soil counts as saturated and the tilt thresholds drop to 60%.</span></div>
+            <div className="flex gap-2"><Droplets className="w-4 h-4 text-river shrink-0 mt-0.5" /><span><strong className="text-ink">Soil moisture</strong> (LM393 probe): at 70% or more the soil counts as saturated and the tilt thresholds drop to 60%.</span></div>
             <div className="flex gap-2"><CloudRain className="w-4 h-4 text-river shrink-0 mt-0.5" /><span><strong className="text-ink">Rain plate</strong>: rain on the plate raises the node to at least WATCH.</span></div>
           </div>
           <ol className="mt-5 space-y-3">
